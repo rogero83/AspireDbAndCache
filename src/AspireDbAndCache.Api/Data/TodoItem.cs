@@ -1,27 +1,26 @@
-﻿using AspireDbAndCache.Web.Enums;
+﻿using AspireDbAndCache.Api.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace AspireDbAndCache.Web.Data
+namespace AspireDbAndCache.Api.Data;
+
+public class TodoItem
 {
-    public class TodoItem
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string Name { get; set; } = string.Empty;
+    [Required]
+    [StringLength(100)]
+    public string Name { get; set; } = string.Empty;
 
-        [StringLength(500)]
-        public string? Description { get; set; }
+    [StringLength(500)]
+    public string? Description { get; set; }
 
-        [Required]
-        public TodoPriority Priority { get; set; }
+    [Required]
+    public TodoPriority Priority { get; set; }
 
-        public bool Fixed { get; set; } = false;
+    public bool Fixed { get; set; } = false;
 
-        public int TodoGroupId { get; set; }
+    public int TodoGroupId { get; set; }
 
-        // Navigation property
-        public required virtual TodoGroup Group { get; set; }
-    }
+    // Navigation property
+    public required virtual TodoGroup Group { get; set; }
 }

@@ -1,12 +1,12 @@
-﻿using AspireDbAndCache.Web.Context;
-using AspireDbAndCache.Web.Data;
-using AspireDbAndCache.Web.Models;
+﻿using AspireDbAndCache.Api.Context;
+using AspireDbAndCache.Api.Data;
+using AspireDbAndCache.Api.Models;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ZiggyCreatures.Caching.Fusion;
 
-namespace AspireDbAndCache.Web.Endpoints
+namespace AspireDbAndCache.Api.Endpoints
 {
     public static class TodoGroupsEndpoint
     {

@@ -1,5 +1,5 @@
-using AspireDbAndCache.Web.Context;
-using AspireDbAndCache.Web.Endpoints;
+using AspireDbAndCache.Api.Context;
+using AspireDbAndCache.Api.Endpoints;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
@@ -16,8 +16,10 @@ builder.AddServiceDefaults();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("mydb")));
 
+// Configurazione di Redis
 builder.AddRedisDistributedCache("redis");
 
+// Configurazione di Fusion Cache
 builder.Services.AddFusionCache()
     .WithRegisteredMemoryCache()
     .WithSerializer(new FusionCacheSystemTextJsonSerializer())
@@ -36,17 +38,6 @@ builder.Services.AddFusionCache()
     {
         ConnectionMultiplexerFactory = () => Task.FromResult(builder.Services.BuildServiceProvider()!.GetRequiredService<IConnectionMultiplexer>()),
     }));
-
-builder.Services.AddHybridCache(options =>
-{
-    options.DefaultEntryOptions = new HybridCacheEntryOptions
-    {
-        LocalCacheExpiration = TimeSpan.FromSeconds(5),
-        Expiration = TimeSpan.FromSeconds(10),
-        // Solo per test, disabilito la traccia locale
-        Flags = HybridCacheEntryFlags.DisableLocalCache
-    };
-});
 
 // Configurazione Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -73,14 +64,11 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure Swagger for API documentation
-//if (app.Environment.IsDevelopment())
-//{
-    app.MapOpenApi();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/openapi/v1.json", "Todos API V1");
-    });
-//}
+app.MapOpenApi();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/openapi/v1.json", "Todos API V1");
+});
 
 // API Endpoints per Articoli
 app.MapTodoGroupsEndpoints();
