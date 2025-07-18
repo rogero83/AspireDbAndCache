@@ -1,8 +1,11 @@
-https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/setup-tooling?tabs=windows&pivots=vscode
+# .NET Aspire Project with PostgreSQL and Redis
 
-https://www.milanjovanovic.tech/blog/using-dotnet-aspire-with-the-docker-publisher
 
+# Create docker-compose file
+Install .net Aspire CLI tool globally
+```bash
 dotnet tool install -g Aspire.Cli --prerelease
+```
 
 
 
