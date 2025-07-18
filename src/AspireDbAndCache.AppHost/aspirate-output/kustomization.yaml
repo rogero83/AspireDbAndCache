@@ -1,0 +1,12 @@
+namespace: demo01
+
+resources:
+- pgsql
+- redis
+- namespace.yaml
+- dashboard.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+

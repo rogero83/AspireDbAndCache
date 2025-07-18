@@ -1,0 +1,20 @@
+@HostAddress = http://localhost:5200
+
+GET {{HostAddress}}/api/todogroups
+
+###
+POST {{HostAddress}}/api/todogroup
+Content-Type: application/json
+{
+  "name": "Name-{{$randomInt}}",
+  "description": "Description-{{$randomInt}}"
+}
+
+###
+PUT {{HostAddress}}/api/todogroup
+Content-Type: application/json
+{
+  "id": 1,
+  "name": "string11",
+  "description": "string11"
+}
