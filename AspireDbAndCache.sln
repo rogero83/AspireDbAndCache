@@ -9,10 +9,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireDbAndCache.AppHost", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireDbAndCache.ServiceDefaults", "src\AspireDbAndCache.ServiceDefaults\AspireDbAndCache.ServiceDefaults.csproj", "{18EBEFDC-15F4-B66D-2444-13528B9DCA37}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementi di soluzione", "Elementi di soluzione", "{9DF70304-0A22-CE1E-AA12-D5904EE55694}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution", "_Solution", "{9DF70304-0A22-CE1E-AA12-D5904EE55694}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireDbAndCache.Frontend", "src\AspireDbAndCache.Frontend\AspireDbAndCache.Frontend.csproj", "{B5ED317E-CCBC-BD8D-4F43-5312353CAA1D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aspire", "Aspire", "{6C83A596-D32D-B35F-00DD-F0C99B673980}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{357F6914-91A3-4392-B469-3ED54A47CCE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireDbAndCahce.Contracts", "src\AspireDbAndCahce.Contracts\AspireDbAndCahce.Contracts.csproj", "{19A02C62-80AA-416C-AFE4-A9793DA8133A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +40,28 @@ Global
 		{18EBEFDC-15F4-B66D-2444-13528B9DCA37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18EBEFDC-15F4-B66D-2444-13528B9DCA37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18EBEFDC-15F4-B66D-2444-13528B9DCA37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5ED317E-CCBC-BD8D-4F43-5312353CAA1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5ED317E-CCBC-BD8D-4F43-5312353CAA1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5ED317E-CCBC-BD8D-4F43-5312353CAA1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5ED317E-CCBC-BD8D-4F43-5312353CAA1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19A02C62-80AA-416C-AFE4-A9793DA8133A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19A02C62-80AA-416C-AFE4-A9793DA8133A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19A02C62-80AA-416C-AFE4-A9793DA8133A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19A02C62-80AA-416C-AFE4-A9793DA8133A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6D27E77-5F30-B4E4-9DDC-1E3F3B382458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6D27E77-5F30-B4E4-9DDC-1E3F3B382458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6D27E77-5F30-B4E4-9DDC-1E3F3B382458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6D27E77-5F30-B4E4-9DDC-1E3F3B382458}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{46910E9F-16BB-41E0-AC71-F4CFFE3967A6} = {357F6914-91A3-4392-B469-3ED54A47CCE4}
+		{7BFE95D3-7ACF-4FD3-89F2-DF996366C3BC} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
+		{18EBEFDC-15F4-B66D-2444-13528B9DCA37} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
+		{B5ED317E-CCBC-BD8D-4F43-5312353CAA1D} = {357F6914-91A3-4392-B469-3ED54A47CCE4}
+		{F6D27E77-5F30-B4E4-9DDC-1E3F3B382458} = {357F6914-91A3-4392-B469-3ED54A47CCE4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD77242F-2A0D-41F0-BD94-6C3906F161E8}

@@ -1,4 +1,4 @@
-﻿namespace AspireDbAndCache.Api.Enums;
+﻿namespace AspireDbAndCahce.Contracts.Enums;
 
 public enum TodoPriority : byte
 {

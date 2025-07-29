@@ -1,0 +1,36 @@
+﻿@page "{groupId:int}"
+@model AspireDbAndCache.Frontend.Pages.Todo.IndexModel
+@{
+    ViewData["Title"] = Model.TodoGroup.Name;
+}
+
+<h1>@Model.TodoGroup.Name</h1>
+<h2>@Model.TodoGroup.Description</h2>
+<small>Created at: @Model.TodoGroup.CreatedAt</small>
+
+<div class="d-flex flex-wrap gap-3">
+    @foreach(var todo in Model.TodoItems)
+    {
+        <div class="card mb-3" style="width: 18rem;">
+            <div class="card-header">
+                @todo.Name
+            </div>
+            <div class="card-body">
+                <p class="card-text">@todo.Description</p>
+                
+            </div>
+            <div class="card-footer text-body-secondary">
+                <p class="card-text"><small class="text-muted">Priority @todo.Priority</small></p>                            
+                @if (@todo.Fixed)
+                {
+                    <span class="badge bg-secondary">Fixed</span>
+                }else
+                {
+                    <span class="badge bg-secondary">Todo</span>
+                }
+                <a href="@Url.Page("/Todo/Edit", new { id = todo.Id })" class="card-link">Edit</a>
+                <a href="@Url.Page("/Todo/Delete", new { id = todo.Id })" class="card-link">Delete</a>
+            </div>
+        </div>
+    }
+</div>

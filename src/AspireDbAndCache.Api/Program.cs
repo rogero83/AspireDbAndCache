@@ -1,7 +1,7 @@
+using AspireDbAndCache.Api.Configurations;
 using AspireDbAndCache.Api.Context;
 using AspireDbAndCache.Api.Endpoints;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using StackExchange.Redis;
 using ZiggyCreatures.Caching.Fusion;
@@ -20,13 +20,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.AddRedisDistributedCache("redis");
 
 // Configurazione di Fusion Cache
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<FusionCacheSystemTextJsonSerializer>();
 builder.Services.AddFusionCache()
     .WithRegisteredMemoryCache()
-    .WithSerializer(new FusionCacheSystemTextJsonSerializer())
-    .WithDistributedCache(new RedisCache(new RedisCacheOptions
-    {
-        ConnectionMultiplexerFactory = () => Task.FromResult(builder.Services.BuildServiceProvider().GetRequiredService<IConnectionMultiplexer>())
-    }))
     .WithDefaultEntryOptions(new FusionCacheEntryOptions
     {
         // Cache duration inMemory
@@ -34,34 +31,35 @@ builder.Services.AddFusionCache()
         // Cache duration in distributed cache
         DistributedCacheDuration = TimeSpan.FromSeconds(20),
     })
-    .WithBackplane(new RedisBackplane(new RedisBackplaneOptions
+    .WithSerializer(sp => sp.GetRequiredService<FusionCacheSystemTextJsonSerializer>())
+    .WithDistributedCache(sp =>
     {
-        ConnectionMultiplexerFactory = () => Task.FromResult(builder.Services.BuildServiceProvider()!.GetRequiredService<IConnectionMultiplexer>()),
-    }));
+        var multiplexer = sp.GetRequiredService<IConnectionMultiplexer>();
+        return new RedisCache(new RedisCacheOptions
+        {
+            ConnectionMultiplexerFactory = () => Task.FromResult(multiplexer)
+        });
+    })
+    .WithBackplane(sp =>
+    {
+        var multiplexer = sp.GetRequiredService<IConnectionMultiplexer>();
+        return new RedisBackplane(new RedisBackplaneOptions
+        {
+            ConnectionMultiplexerFactory = () => Task.FromResult(multiplexer)
+        });
+    });
 
 // Configurazione Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
+builder.Services.AddHostedService<DbMigrationAndSeed>();
+
+Mapping.Configure();
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
-
-// Migrazione automatica del database all'avvio
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    try
-    {
-        // Applica tutte le migrazioni pendenti
-        dbContext.Database.Migrate();
-        Console.WriteLine("Database migrato con successo!");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Errore durante la migrazione: {ex.Message}");
-    }
-}
 
 // Configure Swagger for API documentation
 app.MapOpenApi();
@@ -70,7 +68,9 @@ app.UseSwaggerUI(options =>
     options.SwaggerEndpoint("/openapi/v1.json", "Todos API V1");
 });
 
-// API Endpoints per Articoli
-app.MapTodoGroupsEndpoints();
+// API Endpoints
+app
+    .MapTodoGroupsEndpoints()
+    .MapTodosEndpoint();
 
 await app.RunAsync();

@@ -11,6 +11,7 @@
   <ItemGroup>
     <!-- Rimosso Microsoft.AspNetCore.OpenApi per evitare conflitti con Swashbuckle.AspNetCore -->
     <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="9.3.1" />
+    <PackageReference Include="Bogus" Version="35.6.3" />
     <PackageReference Include="Mapster.EFCore" Version="5.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
@@ -30,11 +31,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AspireDbAndCahce.Contracts\AspireDbAndCahce.Contracts.csproj" />
     <ProjectReference Include="..\AspireDbAndCache.ServiceDefaults\AspireDbAndCache.ServiceDefaults.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using AspireDbAndCache.Api.Enums;
+﻿using AspireDbAndCahce.Contracts.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace AspireDbAndCache.Api.Data;
