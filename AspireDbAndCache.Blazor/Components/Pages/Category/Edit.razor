@@ -1,0 +1,64 @@
+﻿@page "/category/edit"
+@page "/category/edit/{Id:int}"
+@inject IExpenseApi expenseApi
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<h1>@Label</h1>
+
+<EditForm Model="category" OnSubmit="Save">
+    <label for="name">Category Name</label>
+    <InputText id="name" class="form-control" @bind-Value="category.Name" />
+    <label for="color">Color</label>
+    <InputText id="color" class="form-control" @bind-Value="category.Color" />
+    <label for="icon">Icon</label>
+    <InputText id="icon" class="form-control" @bind-Value="category.Icon" />
+    <br />
+    <button type="submit" class="btn btn-primary">Save</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    CategoryListModel category { get; set; } = new CategoryListModel();
+
+    string Label => Id.HasValue ? "Edit Category" : "Add Category";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(Id.HasValue)
+        {
+            // Load the category by Id
+            category = await expenseApi.GetCategoryAsync(Id.Value);
+        }
+    }
+
+    async Task Save()
+    {
+        if (Id.HasValue)
+        {
+            // Update existing category
+            var request = new EditCategoryRequest
+            {
+                Name = category.Name,
+                Color = category.Color,
+                Icon = category.Icon
+            };
+            var result = await expenseApi.UpdateCategoryAsync(Id.Value, request);
+        }
+        else
+        {
+            // Create new category
+            var request = new EditCategoryRequest
+            {
+                Name = category.Name,
+                Color = category.Color,
+                Icon = category.Icon
+            };
+            var result = await expenseApi.CreateCategoryAsync(request);
+        }
+        // Redirect to the category list after saving
+        NavigationManager.NavigateTo("/category");
+    }
+}

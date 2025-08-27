@@ -1,0 +1,30 @@
+﻿@page "/category/detail/{Id:int}"
+@inject IExpenseApi expenseApi
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<h1 @bind-value="@category.Name">@category.Name</h1>
+
+<br />
+<a class="btn btn-primary" href="/category">
+    <i class="bi bi-arrow-left"></i> Back to Categories
+</a>
+<a class="btn btn-secondary" href="/category/edit/@Id">
+    <i class="bi bi-pencil-square"></i> Edit Category
+</a>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    CategoryListModel category { get; set; } = new CategoryListModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var category = await expenseApi.GetCategoryAsync(Id);
+        if (category == null)
+        {
+            NavigationManager.NavigateTo("/category");
+        }
+    }
+}

@@ -26,7 +26,11 @@ var api = builder.AddProject<Projects.AspireDbAndCache_Api>("aspiredbandcache-ap
     .WithReference(db).WaitFor(db)
     .WithReference(redis).WaitFor(redis);
 
-builder.AddProject<Projects.AspireDbAndCache_Frontend>("aspiredbandcache-frontend")
+//builder.AddProject<Projects.AspireDbAndCache_Frontend>("aspiredbandcache-frontend")
+//    .WithExternalHttpEndpoints()
+//    .WithReference(api).WaitFor(api);
+
+builder.AddProject<Projects.AspireDbAndCache_Blazor>("aspiredbandcache-blazor")
     .WithExternalHttpEndpoints()
     .WithReference(api).WaitFor(api);
 

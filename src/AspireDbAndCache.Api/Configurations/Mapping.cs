@@ -8,12 +8,11 @@ namespace AspireDbAndCache.Api.Configurations
     {
         public static void Configure()
         {
-            TypeAdapterConfig<TodoGroup, TodoGroupItemResponse>
+            TypeAdapterConfig<Category, CategoryListModel>
                 .NewConfig()
-                .Map(dest => dest.CountTodo, src => src.Items.Count)
-                .Map(dest => dest.FixedTodo, src => src.Items.Where(x => x.Fixed).Count());
-
-            TypeAdapterConfig<TodoItem, TodoItemReponse>.NewConfig();
+                .Map(dest => dest.CountExpenses, src => src.Expenses.Count)
+                .Map(dest => dest.TotalExpenses, src => src.Expenses.Where(x => x.CashFlow == CashFlowType.Expense).Sum(x => x.Amount))
+                .Map(dest => dest.TotalIncome, src => src.Expenses.Where(x => x.CashFlow == CashFlowType.Income).Sum(x => x.Amount));
         }
     }
 }

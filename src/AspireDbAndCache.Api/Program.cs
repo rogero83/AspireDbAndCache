@@ -53,6 +53,11 @@ builder.Services.AddFusionCache()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
+//builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+//{
+//    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+//});
+
 builder.Services.AddHostedService<DbMigrationAndSeed>();
 
 Mapping.Configure();
@@ -70,7 +75,7 @@ app.UseSwaggerUI(options =>
 
 // API Endpoints
 app
-    .MapTodoGroupsEndpoints()
+    .MapCategoriesEndpoints()
     .MapTodosEndpoint();
 
 await app.RunAsync();

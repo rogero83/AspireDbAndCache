@@ -9,8 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Configurations\DbMigrationAndSeed.cs~RFc738ab.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Rimosso Microsoft.AspNetCore.OpenApi per evitare conflitti con Swashbuckle.AspNetCore -->
-    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="9.3.1" />
+    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="9.4.0" />
     <PackageReference Include="Bogus" Version="35.6.3" />
     <PackageReference Include="Mapster.EFCore" Version="5.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />

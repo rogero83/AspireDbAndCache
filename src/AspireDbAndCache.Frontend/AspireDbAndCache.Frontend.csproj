@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Todo\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
 

@@ -1,0 +1,104 @@
+﻿@page "/category/{page:int?}"
+@inject IExpenseApi expenseApi
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+<h3>Category</h3>
+
+<div class="">
+    <button class="btn btn-primary mb-3" @onclick="AddCategory">
+        <i class="bi bi-plus"></i> Add Category
+    </button>
+    @if (CategoryList != null && CategoryList.Categories.Any())
+    {
+        <table class="table table-hover table-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Category Name</th>
+                    <th>Total expenses</th>
+                    <th>Balance</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var category in CategoryList.Categories)
+                {
+                    <tr style="background-color:@category.Color">
+                        <td>
+                            @if (category.Icon != null)
+                            {
+                                <i class="bi bi-@category.Icon"></i>
+                            }
+                            <span class="ms-2">@category.Name</span>
+                        </td>
+                        <td>@category.CountExpenses</td>
+                        <td>@category.Balance</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => NavigateToCategory(category.Id)">
+                                View Details
+                            </button>
+
+                            <button class="btn btn-primary" @onclick="() => EditCategory(category.Id)">
+                                Edit
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                @if (CategoryList.Page > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="/category/@(CategoryList.Page - 1)" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                }
+                @for (var i = 1; i <= CategoryList.TotalPages; i++)
+                {
+                    <li class="page-item"><a class="page-link" href="/category/@i">@i</a></li>
+                }
+                @if (CategoryList.Page < CategoryList.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="/category/@(CategoryList.Page + 1)" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+    else
+    {
+        <p>No categories found.</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int? page { get; set; }
+
+    public CategoryListResponse? CategoryList { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (page == null || page < 1)
+        {
+            page = 1;
+        }
+
+        var request = CategoryListRequest.WithPage(page.Value);
+
+        CategoryList = await expenseApi.GetCategoriesAsync(request, default);
+    }
+
+    async void NavigateToCategory(int id) => NavigationManager.NavigateTo($"/category/detail/{id}");
+
+    async void AddCategory() => NavigationManager.NavigateTo($"/category/edit");
+
+    async void EditCategory(int id) => NavigationManager.NavigateTo($"/category/edit/{id}");
+}

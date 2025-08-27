@@ -11,6 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireDbAndCache.ServiceDef
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution", "_Solution", "{9DF70304-0A22-CE1E-AA12-D5904EE55694}"
 	ProjectSection(SolutionItems) = preProject
+		mvp.md = mvp.md
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -21,6 +22,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{357F6914-91A3-4392-B469-3ED54A47CCE4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireDbAndCahce.Contracts", "src\AspireDbAndCahce.Contracts\AspireDbAndCahce.Contracts.csproj", "{19A02C62-80AA-416C-AFE4-A9793DA8133A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireDbAndCache.Blazor", "AspireDbAndCache.Blazor\AspireDbAndCache.Blazor.csproj", "{F6D27E77-5F30-B4E4-9DDC-1E3F3B382458}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,5 @@
-using AspireDbAndCache.Frontend.Apis;
+using AspireDbAndCache.Blazor.Apis;
+using AspireDbAndCache.Blazor.Components;
 using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 builder.Services
     .AddRefitClient<IExpenseApi>()
@@ -19,19 +21,17 @@ app.MapDefaultEndpoints();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
+    app.UseExceptionHandler("/Error", createScopeForErrors: true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 
-app.UseRouting();
-
-app.UseAuthorization();
+app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapRazorPages()
-   .WithStaticAssets();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.Run();

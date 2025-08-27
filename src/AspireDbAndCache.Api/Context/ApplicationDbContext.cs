@@ -9,26 +9,21 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<TodoItem> TodoItems { get; set; }
-    public DbSet<TodoGroup> TodoGroups { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Expense> Expenses { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<TodoItem>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-        });
+        modelBuilder.Entity<Category>()
+            .ToTable("Categories")
+            .HasKey(c => c.Id);
+        modelBuilder.Entity<Category>()
+            .HasMany(x => x.Expenses).WithOne(x => x.Category).HasForeignKey(x => x.CategoryId);
 
-        modelBuilder.Entity<TodoGroup>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-
-            entity.HasMany(o => o.Items)
-                  .WithOne(a => a.Group)
-                  .HasForeignKey(o => o.TodoGroupId)
-                  .OnDelete(DeleteBehavior.Cascade);
-        });
+        modelBuilder.Entity<Expense>()
+            .ToTable("Expenses")
+            .HasKey(e => e.Id);
     }
 }

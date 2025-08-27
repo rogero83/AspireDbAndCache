@@ -1,0 +1,49 @@
+﻿@page "/"
+@using AspireDbAndCache.Blazor.Apis
+@using AspireDbAndCahce.Contracts
+@* @inject ITodoApi _todoApi *@
+<PageTitle>Todo Group List</PageTitle>
+
+@* <h1>Todo Group List</h1>
+
+<div class="text-center">
+    <h1 class="display-4">Todos Groups</h1>
+    @if (TodoGroupsResponse!=null && TodoGroupsResponse.TodoGroups.Any()){
+        <table class="table table-hover table-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Group Name</th>
+                    <th>Description</th>
+                    <th>Create at</th>
+                    <th>Todos</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            
+                @foreach (var group in TodoGroupsResponse.TodoGroups)
+                {
+                    <tr>
+                        <td>@group.Name</td>
+                        <td>@group.Description</td>
+                        <td>@group.CreatedAt</td>
+                        <td>@group.CountTodo/@group.FixedTodo</td>
+                        <td>
+                            <a class="btn btn-primary" asp-area="" asp-page="/Todo/index" asp-route-groupId="@group.Id">View Todos</a>
+                        </td>
+                    </tr>
+            
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code{
+    public TodoGroupsResponse? TodoGroupsResponse;
+
+    protected override async Task OnInitializedAsync()
+    {
+        TodoGroupsResponse = await _todoApi.GetTodoGroupsAsync(TodoGroupsRequest.Default);
+    }
+} *@
