@@ -1,3 +1,5 @@
+using AspireDbAndCache.AppHost.Commands;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 // Enable docker publisher
@@ -17,6 +19,7 @@ var pgAdmin = pgsql.WithPgAdmin(x =>
 var db = pgsql.AddDatabase("mydb");
 
 var redis = builder.AddRedis("redis")
+    .WithClearCommand()
     .WithDataVolume("todo-redis")
     .WithLifetime(ContainerLifetime.Persistent);
 
@@ -25,10 +28,6 @@ var api = builder.AddProject<Projects.AspireDbAndCache_Api>("aspiredbandcache-ap
     //.WithReplicas(3)
     .WithReference(db).WaitFor(db)
     .WithReference(redis).WaitFor(redis);
-
-//builder.AddProject<Projects.AspireDbAndCache_Frontend>("aspiredbandcache-frontend")
-//    .WithExternalHttpEndpoints()
-//    .WithReference(api).WaitFor(api);
 
 builder.AddProject<Projects.AspireDbAndCache_Blazor>("aspiredbandcache-blazor")
     .WithExternalHttpEndpoints()

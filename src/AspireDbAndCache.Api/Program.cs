@@ -76,6 +76,6 @@ app.UseSwaggerUI(options =>
 // API Endpoints
 app
     .MapCategoriesEndpoints()
-    .MapTodosEndpoint();
+    .MapExpensesEndpoint();
 
 await app.RunAsync();

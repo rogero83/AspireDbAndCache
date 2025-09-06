@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\AspireDbAndCache.ServiceDefaults\AspireDbAndCache.ServiceDefaults.csproj" />
-    <ProjectReference Include="..\src\AspireDbAndCahce.Contracts\AspireDbAndCahce.Contracts.csproj" />
+    <ProjectReference Include="..\AspireDbAndCache.ServiceDefaults\AspireDbAndCache.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\AspireDbAndCahce.Contracts\AspireDbAndCahce.Contracts.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

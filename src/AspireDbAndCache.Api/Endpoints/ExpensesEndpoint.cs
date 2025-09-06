@@ -1,8 +1,8 @@
 ﻿namespace AspireDbAndCache.Api.Endpoints
 {
-    public static class TodosEndpoint
+    public static class ExpensesEndpoint
     {
-        public static IEndpointRouteBuilder MapTodosEndpoint(this IEndpointRouteBuilder app)
+        public static IEndpointRouteBuilder MapExpensesEndpoint(this IEndpointRouteBuilder app)
         {
             //app.MapGet(ExpenseTrackerEndPoints.GetTodoItemsByGroupId, async (int id,
             //    IFusionCache cache,

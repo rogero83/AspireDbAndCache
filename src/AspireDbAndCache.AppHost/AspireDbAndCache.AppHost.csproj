@@ -19,9 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AspireDbAndCache.Blazor\AspireDbAndCache.Blazor.csproj" />
     <ProjectReference Include="..\AspireDbAndCache.Api\AspireDbAndCache.Api.csproj" />
-    <ProjectReference Include="..\AspireDbAndCache.Frontend\AspireDbAndCache.Frontend.csproj" />
+    <ProjectReference Include="..\AspireDbAndCache.Blazor\AspireDbAndCache.Blazor.csproj" />
   </ItemGroup>
 
 </Project>
