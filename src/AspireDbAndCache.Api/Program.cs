@@ -1,6 +1,8 @@
 using AspireDbAndCache.Api.Configurations;
 using AspireDbAndCache.Api.Context;
 using AspireDbAndCache.Api.Endpoints;
+using AspireDbAndCache.Api.Interfaces;
+using AspireDbAndCache.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using StackExchange.Redis;
@@ -27,9 +29,9 @@ builder.Services.AddFusionCache()
     .WithDefaultEntryOptions(new FusionCacheEntryOptions
     {
         // Cache duration inMemory
-        Duration = TimeSpan.FromSeconds(10),
+        Duration = TimeSpan.FromMinutes(10),
         // Cache duration in distributed cache
-        DistributedCacheDuration = TimeSpan.FromSeconds(20),
+        DistributedCacheDuration = TimeSpan.FromMinutes(20),
     })
     .WithSerializer(sp => sp.GetRequiredService<FusionCacheSystemTextJsonSerializer>())
     .WithDistributedCache(sp =>
@@ -48,6 +50,11 @@ builder.Services.AddFusionCache()
             ConnectionMultiplexerFactory = () => Task.FromResult(multiplexer)
         });
     });
+
+// DI
+builder.Services.AddSingleton<ICacheService, CacheService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
 
 // Configurazione Swagger
 builder.Services.AddEndpointsApiExplorer();

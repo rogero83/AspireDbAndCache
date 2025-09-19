@@ -1,56 +1,72 @@
-﻿namespace AspireDbAndCache.Api.Endpoints
+﻿using AspireDbAndCache.Api.Common;
+using AspireDbAndCache.Api.Interfaces;
+using AspireDbAndCahce.Contracts;
+using Microsoft.AspNetCore.Mvc;
+
+namespace AspireDbAndCache.Api.Endpoints
 {
     public static class ExpensesEndpoint
     {
         public static IEndpointRouteBuilder MapExpensesEndpoint(this IEndpointRouteBuilder app)
         {
-            //app.MapGet(ExpenseTrackerEndPoints.GetTodoItemsByGroupId, async (int id,
-            //    IFusionCache cache,
-            //    ApplicationDbContext db,
-            //    CancellationToken ct) =>
-            //{
-            //    var result = await cache.GetOrSetAsync($"todoitems-{id}", async ct =>
-            //    {
-            //        return await db.TodoItems
-            //            .Where(ti => ti.TodoGroupId == id)
-            //            .ProjectToType<TodoItemReponse>()
-            //            .ToListAsync(ct);
-            //    },
-            //    token: ct);
+            app.MapGet(ExpenseTrackerEndPoints.GetExpenses, async (
+                [FromQuery] int? page,
+                IExpenseService expenseService,
+                CancellationToken ct) =>
+            {
+                var result = await expenseService.GetAllExpensesAsync(page, ct);
+                return result.ToResult();
 
-            //    return Results.Ok(result);
-            //}).Produces<List<TodoItemReponse>>()
-            //.WithTags("TodoItems")
-            //.WithOpenApi();
+            }).Produces<ExpensesListResponse>()
+            .WithTags("Expense")
+            .WithOpenApi();
 
-            //app.MapGet(ExpenseTrackerEndPoints.GetTodoItemById, async (int id, ApplicationDbContext db, CancellationToken ct) =>
-            //{
-            //    var todoItem = await db.TodoItems.FindAsync(id, ct);
-            //    return todoItem == null ? Results.NotFound() : Results.Ok(todoItem.Adapt<TodoItemEditRequest>());
-            //})
-            //.WithTags("TodoItems")
-            //.WithOpenApi();
+            app.MapGet(ExpenseTrackerEndPoints.GetExpensesAmount, async (
+                IExpenseService expenseService,
+                CancellationToken ct) =>
+            {
+                var result = await expenseService.GetExpensesAmount(ct);
+                return result.ToResult();
 
-            //app.MapPut(ExpenseTrackerEndPoints.UpdateTodoItem, async ([FromBody] TodoItemEditRequest request,
-            //    ApplicationDbContext db,
-            //    IFusionCache cache,
-            //    CancellationToken ct) =>
-            //{
-            //    var todoItem = await db.TodoItems.FirstOrDefaultAsync(x => x.Id == request.Id, ct);
-            //    if (todoItem == null)
-            //    {
-            //        return Results.NotFound();
-            //    }
+            })
+            .WithTags("Expense")
+            .WithOpenApi();
 
-            //    request.Adapt(todoItem);
-            //    await db.SaveChangesAsync(ct);
+            app.MapGet(ExpenseTrackerEndPoints.GetExpenseById, async (
+                [FromQuery] int id,
+                IExpenseService expenseService,
+                CancellationToken ct) =>
+            {
+                var result = await expenseService.GetExpenseByIdAsync(id, ct);
+                return result.ToResult();
 
-            //    await cache.RemoveAsync($"todoitems-{todoItem.TodoGroupId}", token: ct);
+            }).WithTags("Expense")
+            .WithOpenApi();
 
-            //    return Results.Ok(todoItem.Adapt<TodoItemReponse>());
-            //})
-            //.WithTags("TodoItems")
-            //.WithOpenApi();
+            app.MapPost(ExpenseTrackerEndPoints.CreateExpense, async (
+                [FromBody] EditExpenseRequest request,
+                IExpenseService expenseService,
+                CancellationToken ct) =>
+            {
+                var result = await expenseService.CreateExpenseAsync(request, ct);
+                return result.ToResult();
+
+            }).Produces<ExpenseEditedResponse>()
+            .WithTags("Expense")
+            .WithOpenApi();
+
+            app.MapPut(ExpenseTrackerEndPoints.UpdateExpense, async (
+                [FromRoute] int id,
+                [FromBody] EditExpenseRequest request,
+                IExpenseService expenseService,
+                CancellationToken ct) =>
+            {
+                var result = await expenseService.UpdateExpenseAsync(id, request, ct);
+                return result.ToResult();
+
+            }).Produces<ExpenseEditedResponse>()
+            .WithTags("Expense")
+            .WithOpenApi();
 
             return app;
         }

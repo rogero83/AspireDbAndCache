@@ -3,6 +3,7 @@
     public static class ExpenseTrackerEndPoints
     {
         public const string GetExpenses = "/api/expenses";
+        public const string GetExpensesAmount = "/api/expenses-amount";
         public const string GetExpenseById = "/api/expenses/{id}";
         public const string CreateExpense = "/api/expenses";
         public const string UpdateExpense = "/api/expenses/{id}";

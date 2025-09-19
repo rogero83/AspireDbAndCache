@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AspireDbAndCahce.Contracts.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AspireDbAndCache.Api.Data
@@ -37,11 +38,5 @@ namespace AspireDbAndCache.Api.Data
         // Navigation property - Ogni spesa appartiene a una categoria
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; } = null!;
-    }
-
-    public enum CashFlowType
-    {
-        Expense = 0,
-        Income = 1
     }
 }

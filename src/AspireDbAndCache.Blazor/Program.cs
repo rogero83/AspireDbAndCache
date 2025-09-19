@@ -1,6 +1,7 @@
-using AspireDbAndCache.Blazor.Apis;
+﻿using AspireDbAndCache.Blazor.Apis;
 using AspireDbAndCache.Blazor.Components;
 using Refit;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +11,20 @@ builder.AddServiceDefaults();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// refit fix for enum 
+var serializer = SystemTextJsonContentSerializer.GetDefaultJsonSerializerOptions();
+serializer.Converters.Remove(serializer.Converters.Single(x => x.GetType().Equals(typeof(JsonStringEnumConverter))));
+var refitSettings = new RefitSettings
+{
+    ContentSerializer = new SystemTextJsonContentSerializer(serializer)
+};
+
 builder.Services
-    .AddRefitClient<IExpenseApi>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https+http://aspiredbandcache-api"));
+    .AddRefitClient<IExpenseApi>(refitSettings)
+    .ConfigureHttpClient(c =>
+    {
+        c.BaseAddress = new Uri("https+http://aspiredbandcache-api");
+    });
 
 var app = builder.Build();
 

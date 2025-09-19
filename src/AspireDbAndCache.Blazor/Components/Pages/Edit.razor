@@ -1,0 +1,103 @@
+﻿@page "/edit"
+@page "/edit/{Id:int}"
+@using AspireDbAndCahce.Contracts.Enums
+@inject IExpenseApi expenseApi
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<h1>@Label</h1>
+
+<EditForm Model="Expense" OnSubmit="Save">
+    <label for="title">Description</label>
+    <InputText id="title" class="form-control" @bind-Value="Expense.Description" />
+    <label for="note">Note</label>
+    <InputText id="note" class="form-control" @bind-Value="Expense.Notes" />
+    
+    <label for="cashflow">Cash flow</label>
+    <InputSelect id="cashflow" class="form-control" @bind-Value="Expense.CashFlow">
+        @foreach (var value in Enum.GetValues<CashFlowType>())
+        {
+            <option value="@value">@value</option>
+        }
+    </InputSelect>
+    
+    <label for="amount">Amount</label>
+    <InputNumber id="amount" class="form-control" @bind-Value="Expense.Amount" />
+    <label for="date">Date</label>
+    <InputDate id="date" class="form-control" @bind-Value="Expense.Date" />
+    <label for="category">Category</label>
+    <InputSelect id="category" class="form-control" @bind-Value="Expense.CategoryId">
+        <option value="0">-- Select category --</option>
+        @if (CategoryList?.Categories != null)
+        {
+            @foreach (var cat in CategoryList.Categories)
+            {
+                <option value="@cat.Id">@cat.Name</option>
+            }
+        }
+    </InputSelect>
+    <br />
+    <button type="submit" class="btn btn-primary">Save</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    public EditExpenseRequest Expense { get; set; } = new EditExpenseRequest();
+    public CategoryListResponse? CategoryList { get; set; }
+
+    string Label => Id.HasValue ? "Edit Expense" : "Add Expense";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(Id.HasValue)
+        {
+            var expenseTaks = expenseApi.GetExpenseAsync(Id.Value, default);
+            var categoryListTaks = expenseApi.GetCategoriesAsync(new CategoryListRequest(1, int.MaxValue), default);
+
+            Task.WaitAll(expenseTaks, categoryListTaks);
+
+            Expense = expenseTaks.Result;
+            CategoryList = categoryListTaks.Result;
+        }
+        else
+        {            
+            Expense.CashFlow = CashFlowType.Expense;
+            CategoryList = await expenseApi.GetCategoriesAsync(new CategoryListRequest(1, int.MaxValue), default);
+            if (CategoryList?.Categories?.Any() == true)
+                Expense.CategoryId = CategoryList.Categories.First().Id;
+        }
+    }
+
+    async Task Save()
+    {
+        if (Id.HasValue)
+        {
+            // Update existing category
+            // var request = new EditExpenseRequest
+            // {
+            //     Name = category.Name,
+            //     Color = category.Color,
+            //     Icon = category.Icon
+            // };
+            var result = await expenseApi.UpdateExpenseAsync(Id.Value, Expense);
+        }
+        else
+        {
+            // Create 
+            var request = new EditExpenseRequest
+            {
+                Description = Expense.Description,
+                Notes = Expense.Notes,
+                CashFlow = Expense.CashFlow,
+                Amount = Expense.Amount,
+                Date = Expense.Date.ToUniversalTime(),
+                CategoryId = Expense.CategoryId
+            };
+            var result = await expenseApi.CreateExpenseAsync(request);
+        }
+        // Redirect to the category list after saving
+        NavigationManager.NavigateTo("/");
+    }
+}

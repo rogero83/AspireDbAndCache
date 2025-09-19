@@ -1,5 +1,6 @@
 ﻿using AspireDbAndCache.Api.Data;
 using AspireDbAndCahce.Contracts;
+using AspireDbAndCahce.Contracts.Enums;
 using Mapster;
 
 namespace AspireDbAndCache.Api.Configurations

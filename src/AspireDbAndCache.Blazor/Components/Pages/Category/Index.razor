@@ -96,9 +96,9 @@
         CategoryList = await expenseApi.GetCategoriesAsync(request, default);
     }
 
-    async void NavigateToCategory(int id) => NavigationManager.NavigateTo($"/category/detail/{id}");
+    void NavigateToCategory(int id) => NavigationManager.NavigateTo($"/category/detail/{id}");
 
-    async void AddCategory() => NavigationManager.NavigateTo($"/category/edit");
+    void AddCategory() => NavigationManager.NavigateTo($"/category/edit");
 
-    async void EditCategory(int id) => NavigationManager.NavigateTo($"/category/edit/{id}");
+    void EditCategory(int id) => NavigationManager.NavigateTo($"/category/edit/{id}");
 }

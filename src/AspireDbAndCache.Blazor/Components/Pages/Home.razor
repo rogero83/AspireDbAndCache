@@ -1,49 +1,116 @@
-﻿@page "/"
+﻿@page "/{page:int?}"
 @using AspireDbAndCache.Blazor.Apis
 @using AspireDbAndCahce.Contracts
-@* @inject ITodoApi _todoApi *@
-<PageTitle>Todo Group List</PageTitle>
+@inject IExpenseApi expenseApi
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+<PageTitle>Expense List</PageTitle>
 
-@* <h1>Todo Group List</h1>
+<h1>Expense List</h1>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col fs-2">
+                Total amount: @ExpenseAmount.ToString("N2")
+            </div>
+            <div class="col-2 text-end">
+                <button class="btn btn-primary" @onclick="AddExpense">
+                    Add expense
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="text-center">
-    <h1 class="display-4">Todos Groups</h1>
-    @if (TodoGroupsResponse!=null && TodoGroupsResponse.TodoGroups.Any()){
+    @if (ExpensesList != null && ExpensesList.Expenses.Any())
+    {
         <table class="table table-hover table-sm">
             <thead class="thead-dark">
                 <tr>
-                    <th>Group Name</th>
-                    <th>Description</th>
                     <th>Create at</th>
-                    <th>Todos</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Amount</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-            
-                @foreach (var group in TodoGroupsResponse.TodoGroups)
+
+                @foreach (var expense in ExpensesList.Expenses)
                 {
                     <tr>
-                        <td>@group.Name</td>
-                        <td>@group.Description</td>
-                        <td>@group.CreatedAt</td>
-                        <td>@group.CountTodo/@group.FixedTodo</td>
+                        <td>@expense.Date</td>
+                        <td>@expense.Description</td>
                         <td>
-                            <a class="btn btn-primary" asp-area="" asp-page="/Todo/index" asp-route-groupId="@group.Id">View Todos</a>
+                            <small>@expense.Note</small>
+                        </td>
+                        <td>@expense.Category.Name</td>
+                        <td>@expense.Amount.ToString("N2")</td>
+                        <td>
+                            <a class="btn btn-primary" asp-area="" asp-page="/edit" asp-route-groupId="@expense.Id">
+                                Edit
+                            </a>
+                            <a class="btn btn-primary" asp-area="" asp-page="/delete" asp-route-groupId="@expense.Id">
+                                Delete
+                            </a>
                         </td>
                     </tr>
-            
+
                 }
             </tbody>
         </table>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                @if (ExpensesList.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="/@(ExpensesList.CurrentPage - 1)" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                }
+                @for (var i = 1; i <= ExpensesList.TotalPages; i++)
+                {
+                    <li class="page-item"><a class="page-link" href="/@i">@i</a></li>
+                }
+                @if (ExpensesList.CurrentPage < ExpensesList.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="/@(ExpensesList.CurrentPage + 1)" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+
     }
 </div>
 
-@code{
-    public TodoGroupsResponse? TodoGroupsResponse;
+@code {
+    [Parameter]
+    public int? page { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    public ExpensesListResponse? ExpensesList { get; set; }
+    public decimal ExpenseAmount { get; set; }
+
+    protected override void OnInitialized()
     {
-        TodoGroupsResponse = await _todoApi.GetTodoGroupsAsync(TodoGroupsRequest.Default);
+        var expenseListTaks = expenseApi.GetExpensesAsync(page, default);
+        var expenseAmountTaks = expenseApi.GetExpensesAmountAsync(default);
+
+        Task.WaitAll(expenseListTaks, expenseAmountTaks);
+
+        ExpensesList = expenseListTaks.Result;
+        ExpenseAmount = expenseAmountTaks.Result;
     }
-} *@
+
+    void AddExpense() => NavigationManager.NavigateTo("/edit");
+}
