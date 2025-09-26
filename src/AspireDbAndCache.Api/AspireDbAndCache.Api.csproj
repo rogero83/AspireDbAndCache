@@ -14,8 +14,8 @@
 
   <ItemGroup>
     <!-- Rimosso Microsoft.AspNetCore.OpenApi per evitare conflitti con Swashbuckle.AspNetCore -->
-    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="9.4.2" />
-    <PackageReference Include="Bogus" Version="35.6.3" />
+    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="9.5.0" />
+    <PackageReference Include="Bogus" Version="35.6.4" />
     <PackageReference Include="Mapster.EFCore" Version="5.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />

@@ -34,9 +34,22 @@ namespace AspireDbAndCache.Api.Services
             return new ExpenseEditedResponse(expense.Id);
         }
 
+        public async Task<Result<bool>> DeleteExpenseAsync(int id, CancellationToken ct)
+        {
+            var result = await db.Expenses.Where(x => x.Id == id).ExecuteDeleteAsync(ct);
+
+            if (result == 0)
+                return ErrorResult.Create("Expense not found.");
+
+            await cacheService.RemoveByTagAsync(CacheKey.ExpenseById(id), ct);
+            await cacheService.RemoveByTagAsync(CacheKey.Tags.AllExpenses, ct);
+
+            return true;
+        }
+
         public async Task<Result<ExpensesListResponse>> GetAllExpensesAsync(int? page, CancellationToken ct)
         {
-            page = page ?? 0;
+            page = page.HasValue ? page.Value - 1 : 0;
             var result = await cacheService.GetOrSetAsync(CacheKey.ExpensesByPage(page.Value), async ct =>
             {
                 var totalCount = await db.Expenses.CountAsync(ct);
@@ -120,12 +133,13 @@ namespace AspireDbAndCache.Api.Services
             expense.CategoryId = request.CategoryId;
             expense.Notes = request.Notes;
             expense.Amount = request.Amount;
+            expense.CashFlow = request.CashFlow;
 
             db.Expenses.Update(expense);
             await db.SaveChangesAsync(ct);
 
             await cacheService.RemoveByTagAsync(CacheKey.Tags.AllExpenses, ct);
-            await cacheService.RemoveByTagAsync(CacheKey.ExpenseById(id), ct);
+            await cacheService.RemoveAsync(CacheKey.ExpenseById(id), ct);
 
             return new ExpenseEditedResponse(expense.Id);
         }

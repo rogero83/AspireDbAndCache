@@ -1,4 +1,6 @@
-﻿namespace AspireDbAndCahce.Contracts
+﻿using AspireDbAndCahce.Contracts.Enums;
+
+namespace AspireDbAndCahce.Contracts
 {
     public class ExpensesListResponse
     {
@@ -14,8 +16,16 @@
         public required int Id { get; set; }
         public required string Description { get; set; }
         public required decimal Amount { get; set; }
+        public required CashFlowType CashFlow { get; set; }
         public required DateTime Date { get; set; }
         public string? Note { get; set; }
-        public required CategoryListModel Category { get; set; }
+        public required CategoryExpenseModel Category { get; set; }
+    }
+
+    public class CategoryExpenseModel
+    {
+        public required string Name { get; set; }
+        public required string Color { get; set; }
+        public required string Icon { get; set; }
     }
 }

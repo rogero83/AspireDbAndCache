@@ -13,8 +13,8 @@
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string Color { get; set; } = "#3B82F6"; // Default blue
-        public string Icon { get; set; } = "cart-fill";
+        public string Color { get; set; } = string.Empty;
+        public string Icon { get; set; } = string.Empty;
 
         public int CountExpenses { get; set; }
         public decimal TotalExpenses { get; set; } = 0.0m;

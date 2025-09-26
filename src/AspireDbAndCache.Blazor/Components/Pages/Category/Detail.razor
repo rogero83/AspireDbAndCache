@@ -3,7 +3,22 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<h1>@category.Name</h1>
+<h1>
+    @if (Category.Icon != null)
+    {
+        <i class="bi bi-@Category.Icon"></i>
+    }
+@Category.Name
+</h1>
+@if (Category.Color != null)
+{
+    <p class="mb-3" style="width:50px; height:50px; background-color:@Category.Color; border-radius: 5px;"></p>
+}
+<p>Total Expenses: @Category.CountExpenses</p>
+<p>Balance: @Category.Balance</p>
+
+
+
 
 <br />
 <a class="btn btn-primary" href="/category">
@@ -17,12 +32,12 @@
     [Parameter]
     public int Id { get; set; }
 
-    CategoryListModel category { get; set; } = new CategoryListModel();
+    CategoryListModel Category { get; set; } = new CategoryListModel();
 
     protected override async Task OnInitializedAsync()
     {
-        var category = await expenseApi.GetCategoryAsync(Id);
-        if (category == null)
+        Category = await expenseApi.GetCategoryAsync(Id);
+        if (Category == null)
         {
             NavigationManager.NavigateTo("/category");
         }

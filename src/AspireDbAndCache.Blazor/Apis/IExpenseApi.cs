@@ -34,6 +34,9 @@ namespace AspireDbAndCache.Blazor.Apis
 
         [Put(ExpenseTrackerEndPoints.UpdateExpense)]
         Task<ExpenseEditedResponse> UpdateExpenseAsync(int id, EditExpenseRequest request, CancellationToken ct = default);
+
+        [Delete(ExpenseTrackerEndPoints.DeleteExpense)]
+        Task<bool> DeleteExpenseAsync(int id, CancellationToken ct = default);
         #endregion Expense
     }
 }

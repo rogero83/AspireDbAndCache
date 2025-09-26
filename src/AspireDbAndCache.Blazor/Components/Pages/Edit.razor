@@ -64,6 +64,7 @@
         else
         {            
             Expense.CashFlow = CashFlowType.Expense;
+            Expense.Date = DateTime.UtcNow;
             CategoryList = await expenseApi.GetCategoriesAsync(new CategoryListRequest(1, int.MaxValue), default);
             if (CategoryList?.Categories?.Any() == true)
                 Expense.CategoryId = CategoryList.Categories.First().Id;

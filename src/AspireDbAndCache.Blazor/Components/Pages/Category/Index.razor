@@ -22,11 +22,11 @@
             <tbody>
                 @foreach (var category in CategoryList.Categories)
                 {
-                    <tr style="background-color:@category.Color">
+                    <tr style="--bs-table-bg:@category.Color">
                         <td>
                             @if (category.Icon != null)
                             {
-                                <i class="bi bi-@category.Icon"></i>
+                                <i class="bi @category.Icon"></i>
                             }
                             <span class="ms-2">@category.Name</span>
                         </td>

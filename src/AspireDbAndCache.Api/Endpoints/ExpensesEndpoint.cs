@@ -33,14 +33,15 @@ namespace AspireDbAndCache.Api.Endpoints
             .WithOpenApi();
 
             app.MapGet(ExpenseTrackerEndPoints.GetExpenseById, async (
-                [FromQuery] int id,
+                [FromRoute] int id,
                 IExpenseService expenseService,
                 CancellationToken ct) =>
             {
                 var result = await expenseService.GetExpenseByIdAsync(id, ct);
                 return result.ToResult();
 
-            }).WithTags("Expense")
+            }).Produces<EditExpenseRequest>()
+            .WithTags("Expense")
             .WithOpenApi();
 
             app.MapPost(ExpenseTrackerEndPoints.CreateExpense, async (
@@ -66,6 +67,16 @@ namespace AspireDbAndCache.Api.Endpoints
 
             }).Produces<ExpenseEditedResponse>()
             .WithTags("Expense")
+            .WithOpenApi();
+
+            app.MapDelete(ExpenseTrackerEndPoints.DeleteExpense, async (
+                [FromRoute] int id,
+                IExpenseService expenseService,
+                CancellationToken ct) =>
+            {
+                var result = await expenseService.DeleteExpenseAsync(id, ct);
+                return result.ToResult();
+            }).WithTags("Expense")
             .WithOpenApi();
 
             return app;

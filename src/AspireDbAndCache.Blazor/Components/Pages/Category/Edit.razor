@@ -1,5 +1,6 @@
 ﻿@page "/category/edit"
 @page "/category/edit/{Id:int}"
+@using AspireDbAndCahce.Contracts.Utility
 @inject IExpenseApi expenseApi
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
@@ -9,10 +10,25 @@
 <EditForm Model="category" OnSubmit="Save">
     <label for="name">Category Name</label>
     <InputText id="name" class="form-control" @bind-Value="category.Name" />
-    <label for="color">Color</label>
-    <InputText id="color" class="form-control" @bind-Value="category.Color" />
+    <label for="color">Color</label>    
+    <InputSelect id="color" class="form-control" @bind-Value="category.Color">
+        <option value="">-- Select a color --</option>
+        @foreach (var color in Const.Colors)
+        {
+            <option value="@color.Value">@color.Key</option>
+        }        
+    </InputSelect>
     <label for="icon">Icon</label>
-    <InputText id="icon" class="form-control" @bind-Value="category.Icon" />
+    <i class="bi @category.Icon"></i>
+    <InputSelect id="icon" class="form-control" @bind-Value="category.Icon">
+        <option value="">-- Select a icon --</option>
+        @foreach (var icon in Const.Icons)
+        {
+            <option value="@icon.Value">
+                @icon.Key
+            </option>
+        }
+    </InputSelect>
     <br />
     <button type="submit" class="btn btn-primary">Save</button>
 </EditForm>

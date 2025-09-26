@@ -102,6 +102,7 @@ namespace AspireDbAndCache.Api.Services
             await db.SaveChangesAsync(ct);
 
             await cacheService.RemoveByTagAsync(CacheKey.Tags.AllCategories, ct);
+            await cacheService.RemoveByTagAsync(CacheKey.Tags.AllExpenses, ct);
             await cacheService.RemoveAsync(CacheKey.CategoryById(id), ct);
 
             return new CategoryEditedResponse(category.Id);
