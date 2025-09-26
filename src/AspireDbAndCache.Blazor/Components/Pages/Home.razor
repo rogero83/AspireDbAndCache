@@ -3,6 +3,7 @@
 @using AspireDbAndCahce.Contracts
 @inject IExpenseApi expenseApi
 @inject NavigationManager NavigationManager
+@inject PersistentComponentState ApplicationState
 @rendermode InteractiveServer
 <PageTitle>Expense List</PageTitle>
 
@@ -12,7 +13,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col fs-2">
-                Total amount: @ExpenseAmount.ToString("N2")
+                Total amount: @State.ExpenseAmount.ToString("N2")
             </div>
             <div class="col-2 text-end">
                 <button class="btn btn-primary" @onclick="AddExpense">
@@ -25,7 +26,7 @@
 
 
 <div>
-    @if (ExpensesList != null && ExpensesList.Expenses.Any())
+    @if (State.ExpensesList != null && State.ExpensesList.Expenses.Any())
     {
         <table class="table table-hover table-sm">
             <thead class="thead-dark">
@@ -40,7 +41,7 @@
             </thead>
             <tbody>
 
-                @foreach (var expense in ExpensesList.Expenses)
+                @foreach (var expense in State.ExpensesList.Expenses)
                 {
                     <tr style="--bs-table-bg:@expense.Category.Color">
                         <td>@expense.Date</td>
@@ -66,26 +67,27 @@
             </tbody>
         </table>
 
-        @if (ExpensesList.TotalPages > 1){
+        @if (State.ExpensesList.TotalPages > 1)
+        {
             <nav aria-label="Page navigation">
                 <ul class="pagination">
-                    @if (ExpensesList.CurrentPage > 1)
+                    @if (State.ExpensesList.CurrentPage > 1)
                     {
                         <li class="page-item">
-                            <a class="page-link" href="/@(ExpensesList.CurrentPage - 1)" aria-label="Previous">
+                            <a class="page-link" href="/@(State.ExpensesList.CurrentPage - 1)" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Previous</span>
                             </a>
                         </li>
                     }
-                    @for (var i = 1; i <= ExpensesList.TotalPages; i++)
+                    @for (var i = 1; i <= State.ExpensesList.TotalPages; i++)
                     {
                         <li class="page-item"><a class="page-link" href="/@i">@i</a></li>
                     }
-                    @if (ExpensesList.CurrentPage < ExpensesList.TotalPages)
+                    @if (State.ExpensesList.CurrentPage < State.ExpensesList.TotalPages)
                     {
                         <li class="page-item">
-                            <a class="page-link" href="/@(ExpensesList.CurrentPage + 1)" aria-label="Next">
+                        <a class="page-link" href="/@(State.ExpensesList.CurrentPage + 1)" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Next</span>
                             </a>
@@ -121,11 +123,14 @@
 
 
 @code {
+    private record HomePageState(ExpensesListResponse? ExpensesList, decimal ExpenseAmount);
+    private PersistingComponentStateSubscription persistingSubscription;
+
     [Parameter]
     public int? page { get; set; }
 
-    public ExpensesListResponse? ExpensesList { get; set; }
-    public decimal ExpenseAmount { get; set; }
+    private HomePageState State { get; set; } = new(null, 0);
+
     private bool showDeleteModal = false;
     private int expenseIdToDelete;
 
@@ -136,13 +141,29 @@
 
     private async Task LoadData()
     {
-        var expenseListTask = expenseApi.GetExpensesAsync(page, default);
-        var expenseAmountTask = expenseApi.GetExpensesAmountAsync(default);
+        persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
-        await Task.WhenAll(expenseListTask, expenseAmountTask);
+        if (!ApplicationState.TryTakeFromJson<HomePageState>(nameof(HomePageState), out var restored))
+        {
+            var expenseListTask = expenseApi.GetExpensesAsync(page, default);
+            var expenseAmountTask = expenseApi.GetExpensesAmountAsync(default);
 
-        ExpensesList = expenseListTask.Result;
-        ExpenseAmount = expenseAmountTask.Result;
+            await Task.WhenAll(expenseListTask, expenseAmountTask);
+
+            State = new HomePageState(expenseListTask.Result, expenseAmountTask.Result);
+            //ExpensesList = expenseListTask.Result;
+            //ExpenseAmount = expenseAmountTask.Result;
+        }
+        else
+        {
+            State = restored!;
+        }
+    }
+
+    private Task PersistData()
+    {
+        ApplicationState.PersistAsJson(nameof(HomePageState), State);
+        return Task.CompletedTask;
     }
 
     void AddExpense() => NavigationManager.NavigateTo("/edit");
